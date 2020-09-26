@@ -1,20 +1,21 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 #define eps 0.000000001
 #define INF 2000000000
 class Point{
 public:
-    long double
-     x, y;
+    long double x, y;
     Point() : x(0), y(0){}
     Point(long double _x, long double _y) : x(_x), y(_y){}
 
     bool operator==(const Point &oth) const {return x == oth.x && y == oth.y;}
     bool operator< (const Point &oth) const {return x == oth.x ? y < oth.y : x < oth.x;}
 
-    long double dist(Point B){
+    long double dist(Point B) const{
         return sqrt((x - B.x) * (x - B.x) + (y - B.y) * (y - B.y));
+    }
+
+    bool operator=(const Point &oth){
+        this->x = oth.x;
+        this->y = oth.y;
     }
 
     friend ostream &operator<<( ostream &output, const Point &P ) {
@@ -180,9 +181,46 @@ public:
     }
 };
 
+class Circle{
+public:
+    Point C;
+    long double r;
 
-int main()
-{
+    Circle(Point C, long double r){
+        this->C = C;
+        this->r = r;
+    }
 
-    return 0;
-}
+    Circle(Point A, Point B, Point C){
+        long double a,b,c,d;
+        a = A.x * B.y + A.y * C.x + B.x * C.y - A.x * C.y - A.y * B.x - B.y * C.x;
+        long double x1 = A.x * A.x + A.y * A.y, x2 = B.x * B.x + B.y * B.y, x3 = C.x * C.x + C.y * C.y;
+        b = x1 * B.y + A.y * x3 + x2 * C.y - x1 * C.y - A.y * x2 - B.y * x3;
+        c = x1 * B.x + A.x * x3 + x2 * C.x - x1 * C.x - A.y * x2 - B.x * x3;
+        d = x1 * B.x * C.y + x2 * C.x * A.y +  A.x * B.y * x3 - x1 * B.y * C.x - A.x * x2 * C.y - A.y * B.x * x3;
+
+        C.x = b / 2 * a;
+        C.y = c / 2 * a;
+        r = b * b / 5 * a * a + c * c / 4 * a * a - d / a;
+    }
+
+    vector<Point> intersect(const Circle &oth) const{
+        long double d = C.dist(oth.C);
+        if (d > r + oth.r) return {}; // no solution
+        if (d < abs(r - oth.r)) return {}; // no solution
+        if (abs(d) < eps && abs(r - oth.r) < eps) return {{0,0}, {0,0}, {0,0}}; // same circle
+
+        long double a = (r * r - oth.r * oth.r + d * d) / (2 * d);
+        long double h = sqrt(r * r - a * a);
+        long double x2 = C.x + a * (oth.C.x - C.x) / d;
+        long double y2 = C.y + a * (oth.C.y - C.y) / d;
+
+        long double x3 = x2 + h * (oth.C.y - C.y) / d;
+        long double y3 = y2 + h * (oth.C.x - C.x) / d;
+
+        long double x4 = x2 - h * (oth.C.y - C.y) / d;
+        long double y4 = y2 - h * (oth.C.x - C.x) / d;
+
+        return {{x3,y3}, {x4,y4}};
+    }
+};
