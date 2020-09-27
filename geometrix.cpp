@@ -13,9 +13,25 @@ public:
         return sqrt((x - B.x) * (x - B.x) + (y - B.y) * (y - B.y));
     }
 
-    bool operator=(const Point &oth){
+    void operator=(const Point &oth){
         this->x = oth.x;
         this->y = oth.y;
+    }
+
+    Point operator+(const Point &oth) const{
+        return {x + oth.x, y + oth.y};
+    }
+
+    Point operator-(const Point &oth) const{
+        return {x - oth.x, y - oth.y};
+    }
+
+    Point operator/(const long double value) const{
+        return {x / value, y / value};
+    }
+
+    Point operator*(const long double value) const{
+        return {x * value, y * value};
     }
 
     friend ostream &operator<<( ostream &output, const Point &P ) {
@@ -186,6 +202,8 @@ public:
     Point C;
     long double r;
 
+    Circle() : C(), r(0) {}
+
     Circle(Point C, long double r){
         this->C = C;
         this->r = r;
@@ -222,5 +240,9 @@ public:
         long double y4 = y2 - h * (oth.C.x - C.x) / d;
 
         return {{x3,y3}, {x4,y4}};
+    }
+
+    vector<Point> intersect(const Line &oth) const{
+        
     }
 };
