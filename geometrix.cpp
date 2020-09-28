@@ -234,15 +234,35 @@ public:
         long double y2 = C.y + a * (oth.C.y - C.y) / d;
 
         long double x3 = x2 + h * (oth.C.y - C.y) / d;
-        long double y3 = y2 + h * (oth.C.x - C.x) / d;
+        long double y3 = y2 - h * (oth.C.x - C.x) / d;
 
         long double x4 = x2 - h * (oth.C.y - C.y) / d;
-        long double y4 = y2 - h * (oth.C.x - C.x) / d;
+        long double y4 = y2 + h * (oth.C.x - C.x) / d;
 
         return {{x3,y3}, {x4,y4}};
     }
 
     vector<Point> intersect(const Line &oth) const{
-        
+        long double a = 1 + oth.m * oth.m;
+        long double b = 2 * oth.m * (oth.b - C.y) - 2 * C.x;
+        long double c = C.x * C.x + (oth.b - C.y) * (oth.b - C.y) - r * r;
+
+        long double delta = b * b - 4 * a * c;
+        if (delta < 0) return {};
+
+        vector<Point> ans;
+
+        long double x1 = (-b + sqrt(delta)) / (2 * a);
+        long double y1 = oth.m * x1 + oth.b;
+
+        ans.push_back({x1,y1});
+
+        long double x2 = (-b - sqrt(delta)) / (2 * a);
+        long double y2 = oth.m * x2 + oth.b;
+
+        if (abs(delta) >= eps){
+            ans.push_back({x2,y2});
+        }
+        return ans;
     }
 };
