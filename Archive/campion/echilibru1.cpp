@@ -1,3 +1,14 @@
+/*
+    Link: http://campion.edu.ro/arhiva/index.php?page=problem&action=view&id=1305
+    Source: Finala .campion 2011
+    
+    Solution:
+
+    For each substring of length 2 * L + 1 we check if exact L elements are smaller than the element in the middle.
+    To check this we use a Binary Indexed Tree.
+
+    Complexity: O(n*log(VAL_MAX))
+*/
 #include <bits/stdc++.h>
 using namespace std;
 #define VAL_MAX 500005
