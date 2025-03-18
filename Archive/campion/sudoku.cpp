@@ -1,16 +1,23 @@
+/*
+    Link: http://campion.edu.ro/arhiva/index.php?page=problem&action=view&id=467
+    Source:  .campion 2005
+
+    Solution:
+
+    Keep a visited vector for each line, each column and each area of 3 by 3. 
+    This helps us to check if we can write a value in a cell in O(1). 
+    Using backtracking algorithm try all possibilities to fill the matrix.
+
+    Complexity: 
+        An upperbound of the complexity is: 9! * 8! * 7! * ... * 2! however
+        in practice it is much smaller because the solution is unique.
+    
+    TO DO: Compute a better upperbound for complexity. The above doesn't take the 3 by 3 
+    areas into account. 
+*/
+
 #include <bits/stdc++.h>
 using namespace std;
-
-void debug_out() { cerr << endl; }
-template<class T> ostream& prnt(ostream& out, T v) { out << v.size() << '\n'; for(auto e : v) out << e << ' '; return out;}
-template<class T> ostream& operator<<(ostream& out, vector <T> v) { return prnt(out, v); }
-template<class T> ostream& operator<<(ostream& out, set <T> v) { return prnt(out, v); }
-template<class T1, class T2> ostream& operator<<(ostream& out, map <T1, T2> v) { return prnt(out, v); }
-template<class T1, class T2> ostream& operator<<(ostream& out, pair<T1, T2> p) { return out << '(' << p.first << ' ' << p.second << ')'; }
-template <typename Head, typename... Tail> void debug_out(Head H, Tail... T) { cerr << " " << H; debug_out(T...);}
-#define dbg(...) cerr << #__VA_ARGS__ << " ->", debug_out(__VA_ARGS__)
-#define dbg_v(x, n) do{cerr<<#x"[]: ";for(int _=0;_<n;++_)cerr<<x[_]<<" ";cerr<<'\n';}while(0)
-#define dbg_ok cerr<<"OK!\n"
 
 int l[10][10], c[10][10], area[10][10];
 string s[9];
@@ -28,6 +35,7 @@ void bkt(int i, int j) {
             bkt(i + 1, 0);
         else
             bkt(i, j + 1);
+        return;
     }
 
     for (int k = 1; k < 10; k++) {
